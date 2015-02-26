@@ -112,7 +112,6 @@ bool FileIo::fileExists(QString const& _url)
 
 QStringList FileIo::makePackage(QString const& _deploymentFolder)
 {
-
 	Json::Value manifest;
 	Json::Value entries(Json::arrayValue);
 
@@ -145,6 +144,7 @@ QStringList FileIo::makePackage(QString const& _deploymentFolder)
 	}
 	rlpStr.appendList(k);
 
+	manifest["entries"] = entries;
 	std::stringstream jsonStr;
 	jsonStr << manifest;
 	QByteArray b =  QString::fromStdString(jsonStr.str()).toUtf8();
@@ -153,7 +153,6 @@ QStringList FileIo::makePackage(QString const& _deploymentFolder)
 	for (unsigned int k = 0; k < files.size(); k++)
 		rlpStr.append(files.at(k));
 
-	manifest["entries"] = entries;
 	bytes dapp = rlpStr.out();
 	dev::h256 dappHash = dev::sha3(dapp);
 	//encrypt
@@ -177,4 +176,3 @@ QStringList FileIo::makePackage(QString const& _deploymentFolder)
 	ret.append(qFileBytes.toBase64());
 	return ret;
 }
-
